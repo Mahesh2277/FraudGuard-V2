@@ -9,6 +9,10 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 # with open("fraud_detection_model.pkl", "rb") as file:
 #     model = pickle.load(file)
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "healthy", "message": "FraudGuard ML API is running"})
+
 @app.route("/predict", methods=["POST"])
 def predict():
     try:

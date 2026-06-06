@@ -24,7 +24,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('${import.meta.env.VITE_API_URL}/api/login', formData);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, formData);
       
       if (response.data.success) {
         // Store token in localStorage

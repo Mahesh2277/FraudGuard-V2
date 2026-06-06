@@ -126,7 +126,7 @@ function App() {
       // First API call to ruleBased route
       let ruleBasedResponse;
       try {
-        ruleBasedResponse = await axios.post('${import.meta.env.VITE_API_URL}/api/ruleBased', {
+        ruleBasedResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/ruleBased`, {
           payer_id: paymentData.payer_id,
           payee_id: paymentData.payee_id,
           amount: paymentData.amount,
@@ -142,7 +142,7 @@ function App() {
       // Second API call with failed_attempts from first response
       let modelResponse;
       try {
-        modelResponse = await axios.post('${import.meta.env.VITE_API_URL}/api/predict', {
+        modelResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/predict`, {
           payer_id: paymentData.payer_id,
           amount: paymentData.amount,
           state: paymentData.state,
@@ -162,7 +162,7 @@ function App() {
       // Make final API call regardless of match (removed the if condition)
       let finalResponse;
       try {
-        finalResponse = await axios.post('${import.meta.env.VITE_API_URL}/api/update', {
+        finalResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/update`, {
           amount: paymentData.amount,
           transaction_id: ruleBasedResponse.data.transaction_id,
           ruleBasedResult: ruleBasedResponse.data.is_fraud,
@@ -174,7 +174,7 @@ function App() {
 
       if(modelResponse.data.fraudulent && ruleBasedResponse.data.is_fraud){
         try {
-          await axios.post('${import.meta.env.VITE_API_URL}/api/result', {
+          await axios.post(`${import.meta.env.VITE_API_URL}/api/result`, {
             transaction_id: ruleBasedResponse.data.transaction_id
           });
         } catch (err) {

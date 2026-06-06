@@ -28,7 +28,7 @@ const TransactionTable = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('${import.meta.env.VITE_API_URL}/api/transactions/stats');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/stats`);
       if (response.ok) {
         const data = await response.json();
         setStats(data.stats);
