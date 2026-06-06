@@ -16,7 +16,7 @@ const AnalyticsCharts = () => {
   const fetchAnalyticsData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/analytics');
+      const response = await fetch('${import.meta.env.VITE_API_URL}/api/analytics');
       if (response.ok) {
         const data = await response.json();
         setAnalyticsData(data);

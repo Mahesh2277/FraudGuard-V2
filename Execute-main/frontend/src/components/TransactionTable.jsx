@@ -28,7 +28,7 @@ const TransactionTable = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/transactions/stats');
+      const response = await fetch('${import.meta.env.VITE_API_URL}/api/transactions/stats');
       if (response.ok) {
         const data = await response.json();
         setStats(data.stats);
@@ -51,7 +51,7 @@ const TransactionTable = () => {
         limit: pagination.limit
       });
 
-      const response = await fetch(`http://localhost:5000/api/transactions?${queryParams}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions?${queryParams}`);
       
       if (!response.ok) {
         const text = await response.text();
