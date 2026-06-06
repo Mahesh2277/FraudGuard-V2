@@ -49,7 +49,8 @@ def predict():
 
         amount = float(data.get("amount", 0))
         failed_attempt = int(data.get("failed_attempt", 0))
-        is_fraud = amount > 10000 or failed_attempt > 3            return jsonify({"fraudulent": is_fraud})
+        is_fraud = amount > 10000 or failed_attempt > 3
+        return jsonify({"fraudulent": is_fraud})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
