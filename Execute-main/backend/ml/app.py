@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import pickle
+# import pickle
 import pandas as pd
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
-with open("fraud_detection_model.pkl", "rb") as file:
-    model = pickle.load(file)
+# with open("fraud_detection_model.pkl", "rb") as file:
+#     model = pickle.load(file)
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -47,14 +47,9 @@ def predict():
             'failed_attempt': 'int64'
         })
 
-        try:
-            prediction = model.predict(input_df)[0]
-            return jsonify({"fraudulent": bool(prediction)})
-        except Exception:
-            amount = float(data.get("amount", 0))
-            failed_attempt = int(data.get("failed_attempt", 0))
-            is_fraud = amount > 10000 or failed_attempt > 3
-            return jsonify({"fraudulent": is_fraud})
+        amount = float(data.get("amount", 0))
+        failed_attempt = int(data.get("failed_attempt", 0))
+        is_fraud = amount > 10000 or failed_attempt > 3            return jsonify({"fraudulent": is_fraud})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
