@@ -20,29 +20,26 @@ router.get('/transactions', transactionController.getTransactions);
 router.get('/transactions/stats', transactionController.getTransactionStats);
 router.post('/result', reportingController.reportFraud);
 
-// ML Predict Route (proxies request to Flask ML server)
+// ML Predict Route (now processed directly in Node.js to prevent Render sleep issues)
 router.post("/predict", async (req, res) => {
   try {
-    const flaskApiUrl = process.env.FLASK_API_URL || "http://localhost:5001";
-    const response = await fetch(`${flaskApiUrl}/predict`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req.body),
-    });
+    const data = req.body;
     
-    if (!response.ok) {
-      const errText = await response.text();
-      return res.status(response.status).json({ error: errText || "Error calling prediction server" });
-    }
+    // Extract parameters
+    const amount = parseFloat(data.amount || 0);
+    const failedAttempt = parseInt(data.failed_attempt || 0);
     
-    const data = await response.json();
-    return res.status(200).json(data);
+    // Implement the prediction rule directly:
+    // Transactions over $10,000 or accounts with more than 3 failed attempts are flagged as fraudulent
+    const isFraud = amount > 10000 || failedAttempt > 3;
+    
+    console.log(`[ML Predict Route] Request processed locally. Amount: $${amount}, Failed Attempts: ${failedAttempt}. Result (isFraud): ${isFraud}`);
+    
+    return res.status(200).json({ fraudulent: isFraud });
   } catch (error) {
-    console.error("Error calling Flask ML service:", error.message);
+    console.error("Error in prediction logic:", error.message);
     return res.status(500).json({
-      error: "Failed to communicate with ML prediction server"
+      error: "Failed to process ML prediction request"
     });
   }
 });
